@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <correlation>
+    <channel name="channel-1">
+       <retrieve>
+          <search-in-map name="call-id"></search-in-map>
+       </retrieve>
+  
+       <command name="command-1">
+          <pre-action>
+             <!-- For each new call, increment the callid counter -->
+             <inc-counter name="callid-counter"> </inc-counter>
+             <!-- And set the call-id field -->
+             <set-value name="call-id"
+                        format="$(callid-counter)@127.0.0.1"></set-value>
+          </pre-action>
+      
+          <post-action>
+             <store name="SID" entity="call-id"></store>
+             <insert-in-map channel="channel-1" name="SID"></insert-in-map>
+          </post-action>
+       </command>
+  
+       <command name="command-1b">
+          <post-action>
+             <store name="alt-sid" entity="o"></store>
+             <insert-in-map channel="channel-2" name="alt-sid"></insert-in-map>
+          </post-action>
+       </command>
+  
+    </channel>
+    <channel name="channel-2">
+       <retrieve>
+          <search-in-map name="call-id"></search-in-map>
+       </retrieve>
+    </channel>
+  </correlation>
+  
+  
+</body>
+</html>
